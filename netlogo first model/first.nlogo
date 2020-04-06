@@ -23,7 +23,7 @@ end
 
 ; run ****************************************************************
 to go
-  if ticks >= nb-ticks-before-stop [ stop ]
+  if ticks >= nb-ticks-before-stop or count turtles = 0 [ stop ]
   move-turtles
   eat-grass
   check-death
@@ -139,7 +139,7 @@ MONITOR
 66
 755
 112
-#turtles
+# sheeps
 count turtles
 0
 1
@@ -150,7 +150,7 @@ MONITOR
 66
 883
 112
-#grass
+# grass
 count patches with [pcolor = green]
 0
 1
@@ -163,7 +163,7 @@ SWITCH
 314
 show-energy?
 show-energy?
-1
+0
 1
 -1000
 
@@ -195,7 +195,7 @@ number
 number
 10
 100
-20.0
+25.0
 1
 1
 NIL
@@ -210,7 +210,7 @@ energy-from-grass
 energy-from-grass
 0
 20
-7.0
+5.0
 1
 1
 NIL
@@ -225,7 +225,7 @@ birth-energy
 birth-energy
 0
 50
-30.0
+25.0
 1
 1
 NIL
@@ -240,7 +240,7 @@ nb-ticks-before-stop
 nb-ticks-before-stop
 0
 500
-149.0
+500.0
 1
 1
 NIL
@@ -255,7 +255,7 @@ grass-growing-rate
 grass-growing-rate
 0
 10
-2.0
+0.0
 1
 1
 NIL
