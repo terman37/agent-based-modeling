@@ -1,5 +1,5 @@
 ; variables **********************************************************
-turtles-own [ energy ]
+;turtles-own [ energy ]
 
 ; setup **************************************************************
 to setup
@@ -20,17 +20,12 @@ to setup-turtles
     set color green
   ]
   ask n-of 4 turtles [set color red]
-
 end
 
 ; run ****************************************************************
 to go
-  if ticks >= nb-ticks-before-stop or count turtles = 0 [ stop ]
+  if ticks >= nb-ticks-before-stop or count turtles with [ color = green ] = 0 [ stop ]
   move-turtles
-  ;eat-grass
-  ;check-death
-  ;reproduce
-  ;regrow-grass
   tick
 end
 
@@ -39,7 +34,6 @@ to move-turtles
     right random 360
     forward 1
     infect-others
-    set energy energy - 1
   ]
 end
 
@@ -47,53 +41,15 @@ to infect-others
   if color = red
     [
       let victim one-of turtles-here with [ color = green ]
-      if ( victim != nobody ) and ( random 100 < 10 )
+      if ( victim != nobody ) and ( random 100 < contamin-percent )
       [ ask victim [set color red]]
-
     ]
-
 end
 
-to eat-sheep
-  let prey one-of turtles-here
-  if prey != nobody [
 
-  ]
 
-end
 
-to eat-grass
-  ask turtles [
-    if pcolor = green [
-      set pcolor black
-      set energy (energy + energy-from-grass)
-    ]
-    ifelse show-energy?
-      [ set label energy ]
-      [ set label "" ]
-  ]
-end
 
-to reproduce
-  ask turtles [
-    if energy > birth-energy [
-      set energy energy - birth-energy
-      hatch 1 [ set energy birth-energy set color blue]
-    ]
-  ]
-end
-
-to check-death
-  ask turtles [
-    if energy <= 0 [ die ]
-  ]
-end
-
-to regrow-grass
-  ask patches [
-    if random 100 < grass-growing-rate [ set pcolor green ]
-  ]
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 189
@@ -178,17 +134,6 @@ count turtles with [color = red]
 1
 11
 
-SWITCH
-10
-280
-184
-313
-show-energy?
-show-energy?
-0
-1
--1000
-
 PLOT
 633
 119
@@ -228,26 +173,11 @@ SLIDER
 200
 183
 233
-energy-from-grass
-energy-from-grass
+contamin-percent
+contamin-percent
 0
-20
-5.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-10
-240
-183
-273
-birth-energy
-birth-energy
-0
-50
-25.0
+100
+56.0
 1
 1
 NIL
@@ -263,21 +193,6 @@ nb-ticks-before-stop
 0
 500
 500.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-10
-319
-183
-352
-grass-growing-rate
-grass-growing-rate
-0
-10
-1.0
 1
 1
 NIL
