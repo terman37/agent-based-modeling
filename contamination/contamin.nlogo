@@ -1,5 +1,6 @@
-; variables **********************************************************
-;turtles-own [ energy ]
+; global vars
+turtles-own [ energy recover-time ]
+patches-own [ p-recover-time ]
 
 ; setup **************************************************************
 to setup
@@ -10,7 +11,10 @@ to setup
 end
 
 to setup-patches
-  ask patches [ set pcolor black ]
+  ask patches [
+    set pcolor black
+    set p-recover-time patch-recov-time
+  ]
 end
 
 to setup-turtles
@@ -18,14 +22,16 @@ to setup-turtles
     setxy random-xcor random-ycor
     set shape "person"
     set color green
+    set recover-time recov-time
   ]
   ask n-of 4 turtles [set color red]
 end
 
 ; run ****************************************************************
 to go
-  if ticks >= nb-ticks-before-stop or count turtles with [ color = green ] = 0 [ stop ]
+  if ticks >= nb-ticks-before-stop or count turtles with [ color = green ] = 0 or count turtles with [ color = red ] = 0 [ stop ]
   move-turtles
+  recover-patch
   tick
 end
 
@@ -34,6 +40,8 @@ to move-turtles
     right random 360
     forward 1
     infect-others
+    infect-from-patch
+    recover-turtle
   ]
 end
 
@@ -43,13 +51,50 @@ to infect-others
       let victim one-of turtles-here with [ color = green ]
       if ( victim != nobody ) and ( random 100 < contamin-percent )
       [ ask victim [set color red]]
+      infect-a-patch
     ]
 end
 
+to infect-from-patch
+  if color = green and pcolor = yellow and random-float 1 < inf-from-patch
+    [
+      set color red
+      ;set pcolor black
+  ]
 
+end
 
+to infect-a-patch
+  if random-float 1 < prob-inf-patch
+  [
+    set pcolor yellow
 
+  ]
+end
 
+to recover-patch
+  ask patches [
+    if pcolor = yellow [
+      set p-recover-time ( p-recover-time - 1 )
+      if p-recover-time < 0 [
+        set pcolor black
+        set p-recover-time patch-recov-time
+      ]
+    ]
+  ]
+
+end
+
+to recover-turtle
+    if color = red [
+      set recover-time ( recover-time - 1 )
+      if recover-time < 0 [
+        set color orange
+        set recover-time recov-time
+      ]
+    ]
+
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 189
@@ -128,7 +173,7 @@ MONITOR
 66
 883
 111
-#infected
+# infected
 count turtles with [color = red]
 0
 1
@@ -150,8 +195,9 @@ true
 true
 "" ""
 PENS
-"turtles" 1.0 0 -2674135 true "" "plot count turtles with [color = red]"
-"grass" 1.0 0 -14439633 true "" "plot count turtles with [color = green]"
+"infected" 1.0 0 -2674135 true "" "plot count turtles with [color = red]"
+"not infected" 1.0 0 -14439633 true "" "plot count turtles with [color = green]"
+"recovered" 1.0 0 -955883 true "" "plot count turtles with [color = orange]"
 
 SLIDER
 10
@@ -161,9 +207,9 @@ SLIDER
 number
 number
 10
-100
-100.0
-1
+1000
+500.0
+10
 1
 NIL
 HORIZONTAL
@@ -177,7 +223,7 @@ contamin-percent
 contamin-percent
 0
 100
-56.0
+10.0
 1
 1
 NIL
@@ -191,8 +237,68 @@ SLIDER
 nb-ticks-before-stop
 nb-ticks-before-stop
 0
-500
-500.0
+5000
+900.0
+100
+1
+NIL
+HORIZONTAL
+
+SLIDER
+14
+287
+186
+320
+prob-inf-patch
+prob-inf-patch
+0
+1
+0.5
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+17
+336
+189
+369
+inf-from-patch
+inf-from-patch
+0
+1
+0.25
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+12
+454
+184
+487
+recov-time
+recov-time
+0
+50
+14.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+12
+495
+184
+528
+patch-recov-time
+patch-recov-time
+0
+50
+4.0
 1
 1
 NIL
