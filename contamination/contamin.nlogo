@@ -1,5 +1,5 @@
 ; global vars
-turtles-own [ energy recover-time ]
+turtles-own [ energy recover-time quarantined? ]
 patches-own [ p-recover-time ]
 
 ; setup **************************************************************
@@ -15,14 +15,22 @@ to setup-patches
     set pcolor black
     set p-recover-time patch-recov-time
   ]
+  set-hospital
+end
+
+to set-hospital
+  ask patches with [pxcor > 8 and pycor > 8]
+  [set pcolor blue]
 end
 
 to setup-turtles
   create-turtles number [
     setxy random-xcor random-ycor
+    if pcolor = blue [ set xcor ( random 24) - 16 set ycor (random 24 ) - 16 ]
     set shape "person"
     set color green
     set recover-time recov-time
+    set quarantined? "no"
   ]
   ask n-of 4 turtles [set color red]
 end
@@ -49,9 +57,14 @@ to infect-others
   if color = red
     [
       let victim one-of turtles-here with [ color = green ]
-      if ( victim != nobody ) and ( random 100 < contamin-percent )
+      if ( victim != nobody ) and ( random 100 < (contamin-percent * quarantine-mult) )
       [ ask victim [set color red]]
       infect-a-patch
+      if random-float 1 < prob_quarantine [
+         set quarantined? "yes"
+
+      ]
+
     ]
 end
 
@@ -300,6 +313,36 @@ patch-recov-time
 50
 4.0
 1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+245
+577
+417
+610
+prob_quarantine
+prob_quarantine
+0
+1
+0.05
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+249
+631
+421
+664
+quarantine-mult
+quarantine-mult
+0
+1
+0.1
+0.01
 1
 NIL
 HORIZONTAL

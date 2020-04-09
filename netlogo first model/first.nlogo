@@ -138,7 +138,7 @@ MONITOR
 633
 66
 755
-112
+111
 # sheeps
 count turtles
 0
@@ -149,7 +149,7 @@ MONITOR
 760
 66
 883
-112
+111
 # grass
 count patches with [pcolor = green]
 0
@@ -160,7 +160,7 @@ SWITCH
 10
 280
 184
-314
+313
 show-energy?
 show-energy?
 0
@@ -190,7 +190,7 @@ SLIDER
 10
 162
 183
-196
+195
 number
 number
 10
@@ -205,12 +205,12 @@ SLIDER
 10
 200
 183
-234
+233
 energy-from-grass
 energy-from-grass
 0
 20
-5.0
+10.0
 1
 1
 NIL
@@ -220,12 +220,12 @@ SLIDER
 10
 240
 183
-274
+273
 birth-energy
 birth-energy
 0
 50
-25.0
+15.0
 1
 1
 NIL
@@ -235,12 +235,12 @@ SLIDER
 10
 87
 183
-121
+120
 nb-ticks-before-stop
 nb-ticks-before-stop
 0
 500
-500.0
+200.0
 1
 1
 NIL
@@ -250,12 +250,12 @@ SLIDER
 10
 319
 183
-353
+352
 grass-growing-rate
 grass-growing-rate
 0
 10
-0.0
+2.0
 1
 1
 NIL
